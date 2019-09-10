@@ -223,13 +223,12 @@ def get_feather_blend_mask(im):
     return fb_mask
 
 def post_process_result(im, fd, result, aligned_im, src, x0, y0, x1, y1, landmarks):
-    output_im = aligned_im.copy()[..., ::-1]
+    output_im = aligned_im.copy()
     fb_mask = get_feather_blend_mask(src)
 
     output_im[x0:x1, y0:y1, :] = (1-fb_mask/255) * output_im[x0:x1, y0:y1, :] \
      + fb_mask/255 * cv2.resize(result, (src.shape[1], src.shape[0]))
     
-    im = im[..., ::-1]
     im = auto_resize(im)
     (fx0, fy0, fx1, fy1), _ = detect_face(im, fd, with_landmarks=False)
     lms_tar = get_tar_landmarks(im[fx0:fx1, fy0:fy1, :])
