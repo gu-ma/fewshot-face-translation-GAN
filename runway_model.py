@@ -16,6 +16,7 @@ def setup(opts):
     fv = FaceVerifier(classes=512)
     fp = face_parser.FaceParser()
     fd = face_detector.FaceAlignmentDetector()
+    fd.build_FAN()
     idet = IrisDetector()
     return {
         'generator': generator,
@@ -34,11 +35,12 @@ def translate(models, inputs):
     generator = models['generator']
     source = np.array(inputs['source'])
     target = np.array(inputs['target'])
-    src, mask, _, _, _ = utils.get_src_inputs(source, fd, fp, idet)
+    src, mask, aligned_im, (x0, y0, x1, y1), landmarks = utils.get_src_inputs(source, fd, fp, idet)
     tar, emb_tar = utils.get_tar_inputs([target], fd, fv)
     out = generator.inference(src, mask, tar, emb_tar)
     result_face = np.squeeze(((out[0] + 1) * 255 / 2).astype(np.uint8))
-    return result_face
+    result_img = utils.post_process_result(source, fd, result_face, aligned_im, src, x0, y0, x1, y1, landmarks)
+    return result_img
 
 if __name__ == "__main__":
     runway.run()
