@@ -37,7 +37,8 @@ def translate(models, inputs):
     src, mask, _, _, _ = utils.get_src_inputs(source, fd, fp, idet)
     tar, emb_tar = utils.get_tar_inputs([target], fd, fv)
     out = generator.inference(src, mask, tar, emb_tar)
-    return out
+    result_face = np.squeeze(((out[0] + 1) * 255 / 2).astype(np.uint8))
+    return result_face
 
 if __name__ == "__main__":
     runway.run()
