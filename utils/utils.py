@@ -223,7 +223,7 @@ def get_feather_blend_mask(im):
     return fb_mask
 
 def post_process_result(im, fd, result, aligned_im, src, x0, y0, x1, y1, landmarks):
-    output_im = aligned_im.copy()
+    output_im = aligned_im.copy()[..., ::-1]
     fb_mask = get_feather_blend_mask(src)
 
     output_im[x0:x1, y0:y1, :] = (1-fb_mask/255) * output_im[x0:x1, y0:y1, :] \
