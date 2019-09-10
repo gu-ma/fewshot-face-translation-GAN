@@ -4,30 +4,27 @@ import numpy as np
 import cv2
 from .umeyama import umeyama
 
-def get_tar_landmarks(img, landmarks_type=68):
+def get_tar_landmarks(img):
     """    
     img: detected face image
     """         
     img_sz = img.shape
-    if landmarks_type == 68:
-        avg_landmarks = np.array(
-            [[0.30366492, 0.02105263], [0.43979058, 0.02105263], [0.54450262, 0.03684211], [0.64921466, 0.06842105], [0.7539267 , 0.1       ], 
-             [0.84816754, 0.15789474], [0.90575916, 0.22105263], [0.97905759, 0.32631579], [1.0104712 , 0.46315789], [0.97905759, 0.61052632], 
-             [0.92146597, 0.73157895], [0.85863874, 0.81052632], [0.76963351, 0.86842105], [0.66492147, 0.9       ], [0.56020942, 0.91578947], 
-             [0.45549738, 0.93157895], [0.33507853, 0.94736842], [0.27225131, 0.11578947], [0.2565445 , 0.17368421], [0.2565445 , 0.23684211], 
-             [0.2565445 , 0.29473684], [0.28795812, 0.34210526], [0.28795812, 0.56842105], [0.27225131, 0.62631579], [0.27225131, 0.68947368], 
-             [0.27225131, 0.76315789], [0.28795812, 0.82631579], [0.40837696, 0.46315789], [0.4973822 , 0.46315789], [0.57591623, 0.44736842], 
-             [0.63350785, 0.44736842], [0.64921466, 0.36842105], [0.66492147, 0.4       ], [0.68062827, 0.46315789], [0.66492147, 0.50526316], 
-             [0.64921466, 0.53684211], [0.36649215, 0.20526316], [0.35078534, 0.23684211], [0.36649215, 0.29473684], [0.37696335, 0.34210526], 
-             [0.39267016, 0.29473684], [0.39267016, 0.23684211], [0.39267016, 0.58421053], [0.36649215, 0.62631579], [0.36649215, 0.68947368], 
-             [0.37696335, 0.73157895], [0.40837696, 0.68947368], [0.40837696, 0.62631579], [0.7382199 , 0.26315789], [0.7382199 , 0.32631579], 
-             [0.72774869, 0.41578947], [0.7382199 , 0.46315789], [0.7382199 , 0.48947368], [0.7382199 , 0.6       ], [0.7539267 , 0.67368421], 
-             [0.83246073, 0.6       ], [0.85863874, 0.52105263], [0.87434555, 0.46315789], [0.85863874, 0.38421053], [0.81675393, 0.32631579], 
-             [0.7382199 , 0.27894737], [0.7539267 , 0.38421053], [0.76963351, 0.46315789], [0.76963351, 0.52105263], [0.7539267 , 0.65789474], 
-             [0.81675393, 0.52105263], [0.81675393, 0.46315789], [0.81675393, 0.38421053]]
-        )
-    else:
-        raise NotImplementedError(f"Only 68 points landmarks model is provided. Received {landmarks_pnts}.")
+    avg_landmarks = np.array(
+        [[0.30366492, 0.02105263], [0.43979058, 0.02105263], [0.54450262, 0.03684211], [0.64921466, 0.06842105], [0.7539267 , 0.1       ], 
+            [0.84816754, 0.15789474], [0.90575916, 0.22105263], [0.97905759, 0.32631579], [1.0104712 , 0.46315789], [0.97905759, 0.61052632], 
+            [0.92146597, 0.73157895], [0.85863874, 0.81052632], [0.76963351, 0.86842105], [0.66492147, 0.9       ], [0.56020942, 0.91578947], 
+            [0.45549738, 0.93157895], [0.33507853, 0.94736842], [0.27225131, 0.11578947], [0.2565445 , 0.17368421], [0.2565445 , 0.23684211], 
+            [0.2565445 , 0.29473684], [0.28795812, 0.34210526], [0.28795812, 0.56842105], [0.27225131, 0.62631579], [0.27225131, 0.68947368], 
+            [0.27225131, 0.76315789], [0.28795812, 0.82631579], [0.40837696, 0.46315789], [0.4973822 , 0.46315789], [0.57591623, 0.44736842], 
+            [0.63350785, 0.44736842], [0.64921466, 0.36842105], [0.66492147, 0.4       ], [0.68062827, 0.46315789], [0.66492147, 0.50526316], 
+            [0.64921466, 0.53684211], [0.36649215, 0.20526316], [0.35078534, 0.23684211], [0.36649215, 0.29473684], [0.37696335, 0.34210526], 
+            [0.39267016, 0.29473684], [0.39267016, 0.23684211], [0.39267016, 0.58421053], [0.36649215, 0.62631579], [0.36649215, 0.68947368], 
+            [0.37696335, 0.73157895], [0.40837696, 0.68947368], [0.40837696, 0.62631579], [0.7382199 , 0.26315789], [0.7382199 , 0.32631579], 
+            [0.72774869, 0.41578947], [0.7382199 , 0.46315789], [0.7382199 , 0.48947368], [0.7382199 , 0.6       ], [0.7539267 , 0.67368421], 
+            [0.83246073, 0.6       ], [0.85863874, 0.52105263], [0.87434555, 0.46315789], [0.85863874, 0.38421053], [0.81675393, 0.32631579], 
+            [0.7382199 , 0.27894737], [0.7539267 , 0.38421053], [0.76963351, 0.46315789], [0.76963351, 0.52105263], [0.7539267 , 0.65789474], 
+            [0.81675393, 0.52105263], [0.81675393, 0.46315789], [0.81675393, 0.38421053]]
+    )
     tar_landmarks = [(int(xy[0]*img_sz[0]), int(xy[1]*img_sz[1])) for xy in avg_landmarks]
     return tar_landmarks
 
@@ -113,7 +110,7 @@ def detect_face(im, fd, with_landmarks=True):
     return (x0, y0, x1, y1), landmarks
   
 def align_image(im, x0, y0, x1, y1, landmarks):
-    lms_tar = get_tar_landmarks(im[x0:x1, y0:y1, :], 68)
+    lms_tar = get_tar_landmarks(im[x0:x1, y0:y1, :])
     aligned_img, M = landmarks_match(
         im, 
         landmarks[0], np.array(lms_tar)+[x0,y0], 
@@ -161,7 +158,7 @@ def auto_resize(im, max_size=768):
         im = cv2.resize(im, (0,0), fx=ratio, fy=ratio)
     return im
 
-def get_src_inputs(fn, fd, fp, idet):
+def get_src_inputs(im, fd, fp, idet):
     """
     Inputs:
         fn: A string. Path to a image file.
@@ -174,7 +171,6 @@ def get_src_inputs(fn, fd, fp, idet):
         (x0, y0, x1, y1), A tuple of integers. Bounding box coordinates.
         landmarks: A numpy array of shape (68,2). 68-points face landmarks.
     """
-    im = cv2.imread(fn)[..., ::-1]
     im = auto_resize(im)
     (x0, y0, x1, y1), landmarks = detect_face(im, fd)
     aligned_im = align_image(im, x0, y0, x1, y1, landmarks)
@@ -193,7 +189,7 @@ def get_src_inputs(fn, fd, fp, idet):
     parsing_map_with_iris = draw_irises(colored_parsing_map, eyes_mask, eyes_lms)
     return aligned_face, parsing_map_with_iris, aligned_im, (x0, y0, x1, y1), landmarks
   
-def get_tar_inputs(fns, fd, fv):
+def get_tar_inputs(imgs, fd, fv):
     """
     Inputs:
         fn: A string or a list. Path to a image file(s).
@@ -203,14 +199,10 @@ def get_tar_inputs(fns, fd, fv):
         aligned_face: A RGB image.
         emb_tar: A numpy array of shape (512,). Latent embeddings of aligned_face.
     """
-    if not type(fns) == list:
-        if type(fns) == str:
-            fns = [fns]
-        else:
-            raise ValueError("Received and unknown filename type. fns shoulbe be a list or a string.")
+    if not type(imgs) == list:
+        imgs = [imgs]
     emb_avg_tar = np.zeros((1, 512))
-    for fn in fns:
-        im = cv2.imread(fn)[..., ::-1]
+    for im in imgs:
         im = auto_resize(im)
         (x0, y0, x1, y1), landmarks = detect_face(im, fd)
         aligned_im = align_image(im, x0, y0, x1, y1, landmarks)    
@@ -218,7 +210,7 @@ def get_tar_inputs(fns, fd, fv):
         aligned_face = aligned_im[x0:x1, y0:y1, :].copy()
         emb_tar = fv.extract_embeddings(aligned_face)
         emb_avg_tar += emb_tar
-    emb_avg_tar /= len(fns)
+    emb_avg_tar /= len(imgs)
     return aligned_face, emb_avg_tar
 
 def get_feather_blend_mask(im):
@@ -230,17 +222,17 @@ def get_feather_blend_mask(im):
     fb_mask = cv2.GaussianBlur(fb_mask, (kernel_size,kernel_size), 0)
     return fb_mask
 
-def post_process_result(fn, fd, result, aligned_im, src, x0, y0, x1, y1, landmarks):
+def post_process_result(im, fd, result, aligned_im, src, x0, y0, x1, y1, landmarks):
     output_im = aligned_im.copy()
     fb_mask = get_feather_blend_mask(src)
 
     output_im[x0:x1, y0:y1, :] = (1-fb_mask/255) * output_im[x0:x1, y0:y1, :] \
      + fb_mask/255 * cv2.resize(result, (src.shape[1], src.shape[0]))
     
-    im = cv2.imread(fn)[..., ::-1]
+    im = im[..., ::-1]
     im = auto_resize(im)
     (fx0, fy0, fx1, fy1), _ = detect_face(im, fd, with_landmarks=False)
-    lms_tar = get_tar_landmarks(im[fx0:fx1, fy0:fy1, :], 68)
+    lms_tar = get_tar_landmarks(im[fx0:fx1, fy0:fy1, :])
 
     output_im, _ = landmarks_match(
         output_im, 

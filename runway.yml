@@ -1,0 +1,13 @@
+python: 3.6
+cuda: 10.0
+entrypoint: python runway_model.py
+spec:
+  gpu: True
+  cpu: False
+files:
+  ignore:
+    - weights/*
+build_steps:
+  - git clone https://github.com/shaoanlu/face_toolbox_keras.git
+  - pip install tensorflow-gpu
+  - pip install -r requirements.txt
