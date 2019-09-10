@@ -12,13 +12,13 @@ import shutil
 def setup(opts):
     shutil.move(opts['encoder'], 'weights/encoder.h5')
     shutil.move(opts['decoder'], 'weights/decoder.h5')
-    model = FaceTranslationGANInferenceModel()
+    generator = FaceTranslationGANInferenceModel()
     fv = FaceVerifier(classes=512)
     fp = face_parser.FaceParser()
     fd = face_detector.FaceAlignmentDetector()
     idet = IrisDetector()
     return {
-        'model': model,
+        'generator': generator,
         'fp': fp,
         'fd': fd,
         'fv': fv,
@@ -26,16 +26,17 @@ def setup(opts):
     }
 
 @runway.command('translate', inputs={'source': runway.image, 'target': runway.image}, outputs={'result': runway.image})
-def translate(model, inputs):
-    fd = model['fd']
-    fp = model['fp']
-    idet = model['idet']
-    fv = model['fv']
+def translate(models, inputs):
+    fd = models['fd']
+    fp = models['fp']
+    idet = models['idet']
+    fv = models['fv']
+    generator = models['generator']
     source = np.array(inputs['source'])
     target = np.array(inputs['target'])
     src, mask, _, _, _ = utils.get_src_inputs(source, fd, fp, idet)
     tar, emb_tar = utils.get_tar_inputs([target], fd, fv)
-    out = model.inference(src, mask, tar, emb_tar)
+    out = generator.inference(src, mask, tar, emb_tar)
     return out
 
 if __name__ == "__main__":
