@@ -1,2 +1,3 @@
 keras==2.2.4
 runway-python
+opencv-python
