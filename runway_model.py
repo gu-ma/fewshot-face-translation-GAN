@@ -26,8 +26,15 @@ def setup(opts):
         'idet': idet
     }
 
+last_target = None
+aligned_target = None
+target_embedding = None
+
 @runway.command('translate', inputs={'source': runway.image, 'target': runway.image}, outputs={'result': runway.image})
 def translate(models, inputs):
+    global aligned_target
+    global target_embedding
+    global last_target
     fd = models['fd']
     fp = models['fp']
     idet = models['idet']
@@ -36,8 +43,10 @@ def translate(models, inputs):
     source = np.array(inputs['source'])
     target = np.array(inputs['target'])
     src, mask, aligned_im, (x0, y0, x1, y1), landmarks = utils.get_src_inputs(source, fd, fp, idet)
-    tar, emb_tar = utils.get_tar_inputs([target], fd, fv)
-    out = generator.inference(src, mask, tar, emb_tar)
+    if last_target is None or not np.array_equal(last_target, target):
+        aligned_target, target_embedding = utils.get_tar_inputs([target], fd, fv)
+    last_target = target
+    out = generator.inference(src, mask, aligned_target, target_embedding)
     result_face = np.squeeze(((out[0] + 1) * 255 / 2).astype(np.uint8))
     result_img = utils.post_process_result(source, fd, result_face, aligned_im, src, x0, y0, x1, y1, landmarks)
     return result_img
