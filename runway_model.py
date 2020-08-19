@@ -10,8 +10,8 @@ import shutil
 
 @runway.setup(options={'encoder': runway.file(extension='.h5'), 'decoder': runway.file(extension='.h5')})
 def setup(opts):
-    shutil.copy(opts['encoder'], 'weights/encoder.h5')
-    shutil.copy(opts['decoder'], 'weights/decoder.h5')
+    shutil.move(opts['encoder'], 'weights/encoder.h5')
+    shutil.move(opts['decoder'], 'weights/decoder.h5')
     generator = FaceTranslationGANInferenceModel()
     fv = FaceVerifier(classes=512)
     fp = face_parser.FaceParser()
