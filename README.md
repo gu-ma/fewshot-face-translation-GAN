@@ -45,6 +45,13 @@ During training phase, the input face A is heavily blurred and we train the mode
   - Keras 2.2.4
   - TensorFlow 1.12.0 or 1.13.1
 
+## Download weights
+
+Download and move to `weights`
+  - https://drive.google.com/uc?id=1DUMmZGTGKMyEYSKy-w34IDHawVF24rIs
+  - https://drive.google.com/uc?id=1xl8cg7xaRnMsyiODcXguJ83d5hwodckB
+
+
 ## References
 1. [Semantic Image Synthesis with Spatially-Adaptive Normalization](https://arxiv.org/abs/1903.07291)
 2. [Few-Shot Unsupervised Image-to-Image Translation](https://arxiv.org/abs/1905.01723)

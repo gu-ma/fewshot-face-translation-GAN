@@ -52,4 +52,5 @@ def translate(models, inputs):
     return result_img
 
 if __name__ == "__main__":
-    runway.run()
+    # runway.run()
+    runway.run(model_options={'encoder': './weights/encoder.h5', 'decoder': './weights/decoder.h5'})
